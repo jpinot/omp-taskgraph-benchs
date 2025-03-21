@@ -27,5 +27,6 @@ heat_record: heat.c misc.o
 heat_vanilla: heat.c misc.o
 	$(CC) $(OMP) $(CFLAGS) $+ $(LFLAGS) -o $@ -L$(TDG_LIB) -I$(TDG_INC)
 
+.PHONY: clean
 clean:
 	rm -fr *.o $(BIN) *ppm tdg.dot tdg.c *_tdg.c
