@@ -1,10 +1,11 @@
-CC = clang
+CC = $(OMP_PATH)/bin/clang
 PREFIX = src
 OMP = -fopenmp
 CFLAGS = -O3 -g
 LIBS = -lm
-TDG = -DTDG -fopenmp-taskgraph
-TDG_LIB = $(OMP_PATH)
+TDG = -DTDG -fopenmp
+TDG_LIB = $(OMP_PATH)/lib
+TDG_INC = $(OMP_PATH)/projects/openmp/runtime/src/
 BIN = nbody
 
 SRC = $(PREFIX)/util.c $(PREFIX)/kernel.c
@@ -21,7 +22,7 @@ $(BIN)_vanilla: $(SRC) $(PREFIX)/main.c
 	$(CC) $(CFLAGS) $(OMP) $^ -o $@ -g $(LIBS) 
 
 $(BIN)_for: $(SRC) $(PREFIX)/main_for.c
-	$(CC) $(CFLAGS) $(OMP) $^ -o $@ -g $(LIBS)
+	$(CC) $(CFLAGS) $(OMP) $^ -o $@ -g $(LIBS) -I$(TDG_INC)
 
 .PHONY: clean
 
