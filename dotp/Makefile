@@ -4,7 +4,6 @@ OMP		= -fopenmp
 TDG		= -DTDG -fopenmp
 TDG_LIB		= $(OMP_PATH)
 TDG_INC = $(OMP_PATH)/projects/openmp/runtime/src/
-# LIBS		= -lrt  -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl
 LIBS = -lmkl_sequential -lmkl_core -lm -lmkl_rt -lpthread
 MKL_LIB = $(MKL_PATH)/lib/intel64 -Wl,-rpath,$(MKL_PATH)/lib/intel64
 MKL_INC = $(MKL_PATH)/include
@@ -14,9 +13,7 @@ BIN		= dot_product_serial dot_product_vanilla dot_product_record dot_product_for
 all: $(BIN)
 
 kernels.o: kernels.c
-	# $(CC) $(CFLAGS) -I$(MKL_INC) -DMKL_ILP64 -m64 -I${MKLROOT}/include $^ -c -o $@ -L$(MKL_LIB)
-	$(CC) $(CFLAGS) -I$(MKL_INC) $^ -DSEQ -o $@
-	# $(CC) $(CFLAGS) -I$(MKL_INC) $^ -DSEQ -o $@ -L$(MKL_LIB) -L$(LIBS)
+	$(CC) $(CFLAGS) -I$(MKL_INC) -DMKL_ILP64 -m64 $^ -c -o $@ -L$(MKL_LIB)
 
 dot_product_serial : dotp-omp.c main-omp.c kernels.o
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
