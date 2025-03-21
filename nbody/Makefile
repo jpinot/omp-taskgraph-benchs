@@ -27,4 +27,4 @@ $(BIN)_for: $(SRC) $(PREFIX)/main_for.c
 .PHONY: clean
 
 clean:
-	rm $(BIN)_serial $(BIN)_record $(BIN)_vanilla nbody_out.xyz $(BIN)_for
+	rm -f $(BIN)_serial $(BIN)_record $(BIN)_vanilla nbody_out.xyz $(BIN)_for
