@@ -116,8 +116,8 @@ RUN git clone --branch $BENCH_BRANCH --single-branch --depth 1 https://$BENCH_RE
 
 WORKDIR /omp-taskgraph-benchs
 
-RUN MKL_PATH=~/intel/oneapi/mkl/2024.1 \
-  OPENCV_PATH=/usr/ \
+RUN MKL_PATH=/opt/intel/oneapi/mkl/2025.1 \
+  OPENCV_PATH=/usr/local/ \
   OMP_PATH=/usr/clang-x86 \
   make
 
