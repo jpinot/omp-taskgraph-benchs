@@ -1,6 +1,42 @@
 # tdg-benchs
 Set of benchmarks used to test the performance of taskgraph. Growing
 
+## Clang compilation
+
+To create the SDK containing all the required LLVM, Clang, and OpenMP files for different versions, the following script was used.
+Note: the flag `LIBOMP_OMPX_TASKGRAPH` can be toggled on/off for different test configurations.
+``bash
+#!/bin/bash
+
+branch=$(git symbolic-ref --short HEAD)
+commit=$(git rev-parse --short HEAD)
+install_prefix=/home/jpinot/clang-x86-$branch-$commit
+
+echo
+echo "**** Compailing branch $branch, commit $commit"
+echo
+
+mkdir -p build && cd build && \
+  cmake \
+    -DLLVM_ENABLE_PROJECTS="clang;openmp" \
+    -DLLVM_BUILD_EXAMPLES=OFF \
+    -DCMAKE_CXX_COMPILER=/apps/clang/16.0.6/bin/clang++ \
+    -DCMAKE_C_COMPILER=/apps/clang/16.0.6/bin/clang \
+    -DLLVM_CCACHE_BUILD=ON \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLLVM_ENABLE_ASSERTIONS=ON \
+    -DLLVM_USE_LINKER=lld \
+    -DLLVM_USE_SPLIT_DWARF=ON \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF \
+    -DLLVM_TARGETS_TO_BUILD="Native" \
+    -DCMAKE_INSTALL_PREFIX=$install_prefix \
+    -DLIBOMP_OMPX_TASKGRAPH=TRUE \
+    -G Ninja ../llvm && \
+  ninja install
+
+zip -r $install_prefix.zip $install_prefix/
+```
+
 ## How to Build & Run
 
 ### For benchmarks that do not belong to NAS
