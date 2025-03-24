@@ -58,70 +58,78 @@ RUN apt-get update && apt-get upgrade -y && \
   rm -rf /var/lib/apt/lists/*
 
 ##### OneApi install ######
+## deps: cmake g++ wget unzip
+# Download and unpack sources
+RUN wget -O opencv.zip https://github.com/opencv/opencv/archive/4.x.zip && \
+  unzip opencv.zip
+ 
+# Build
+RUN mkdir -p build && cd build && \
+  cmake CMAKE_INSTALL_PREFIX=/usr/ -GNinja ../opencv-4.x && ninja install
 
 ##### LLVM-COMPILATION #####
-# ENV SDK_INSTALLER=clang-x86
-# # Copy and prepare SDK installer
-# RUN mkdir -p /installer
-# COPY ./$SDK_INSTALLER /installer/
-# RUN mkdir -p /installer/install
+ENV SDK_INSTALLER=clang-x86
+# Copy and prepare SDK installer
+RUN mkdir -p /installer
+COPY ./$SDK_INSTALLER /installer/
+RUN mkdir -p /installer/install
 
-# # Unpack and set up SDK
-# RUN if [ -e /installer/$SDK_INSTALLER ]; then \
-#       echo "ACE installer already present" && \
-#       tar --strip-components=1 -xf /installer/$SDK_INSTALLER -C /installer/install; \
-#     else \
-#       echo "Downloading Kalray ACE failed, file not found!" && \
-#       exit 1; \
-#     fi
+# Unpack and set up SDK
+RUN if [ -e /installer/$SDK_INSTALLER ]; then \
+      echo "ACE installer already present" && \
+      tar --strip-components=1 -xf /installer/$SDK_INSTALLER -C /installer/install; \
+    else \
+      echo "Downloading Kalray ACE failed, file not found!" && \
+      exit 1; \
+    fi
 
-# # Install ACE packages and clean-up installation
-# # RUN apt-get update && apt-get install -y /installer/install/Ubuntu_${UBUNTU_VERSION}/*.deb \
-# #     && rm -rf /installer/
-# # TODO: remove installer
-# RUN mv /installer/install /usr/
+# Install ACE packages and clean-up installation
+# RUN apt-get update && apt-get install -y /installer/install/Ubuntu_${UBUNTU_VERSION}/*.deb \
+#     && rm -rf /installer/
+# TODO: remove installer
+RUN mv /installer/install /usr/
 
 
 # ENV LLVM_REPO="${GIT_REPO}/${GIT_USER}/llvm-project.git"
 # ENV LLVM_BRANCH="openmp_taskgraph"
 
-# # Clone the repository
-# RUN git clone --branch $LLVM_BRANCH --single-branch --depth 1 https://$LLVM_REPO /llvm-project
+# Clone the repository
+RUN git clone --branch $LLVM_BRANCH --single-branch --depth 1 https://$LLVM_REPO /llvm-project
 
-# WORKDIR /llvm-project
+WORKDIR /llvm-project
 
-# RUN mkdir build && cd build && \
-#   cmake \
-#     -DLLVM_ENABLE_PROJECTS="clang;openmp" \
-#     -DLLVM_BUILD_EXAMPLES=OFF \
-#     -DCMAKE_CXX_COMPILER=clang++ \
-#     -DCMAKE_C_COMPILER=clang \
-#     -DLLVM_CCACHE_BUILD=ON \
-#     -DCMAKE_BUILD_TYPE=Release \
-#     -DLLVM_ENABLE_ASSERTIONS=ON \
-#     -DLLVM_USE_LINKER=lld \
-#     -DLLVM_USE_SPLIT_DWARF=ON \
-#     -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF \
-#     -DLLVM_TARGETS_TO_BUILD="Native" \
-#     -DCMAKE_INSTALL_PREFIX=/usr/clang-x86 \
-#     -DLIBOMP_OMPX_TASKGRAPH=TRUE \
-#     -G Ninja ../llvm && \
-#   ninja install
+RUN mkdir build && cd build && \
+  cmake \
+    -DLLVM_ENABLE_PROJECTS="clang;openmp" \
+    -DLLVM_BUILD_EXAMPLES=OFF \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_C_COMPILER=clang \
+    -DLLVM_CCACHE_BUILD=ON \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLLVM_ENABLE_ASSERTIONS=ON \
+    -DLLVM_USE_LINKER=lld \
+    -DLLVM_USE_SPLIT_DWARF=ON \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF \
+    -DLLVM_TARGETS_TO_BUILD="Native" \
+    -DCMAKE_INSTALL_PREFIX=/usr/clang-x86 \
+    -DLIBOMP_OMPX_TASKGRAPH=TRUE \
+    -G Ninja ../llvm && \
+  ninja install
 
-# #### Build benchmarks ####
-# # Set up repository details
-# ENV BENCH_REPO="${GIT_REPO}/${GIT_USER}/omp-taskgraph-benchs.git"
-# ENV BENCH_BRANCH="develop"
+#### Build benchmarks ####
+# Set up repository details
+ENV BENCH_REPO="github.com/${GIT_USER}/omp-taskgraph-benchs.git"
+ENV BENCH_BRANCH="develop"
 
-# # Clone the repository
-# RUN git clone --branch $BENCH_BRANCH --single-branch --depth 1 https://$BENCH_REPO /llvm-project
+# Clone the repository
+RUN git clone --branch $BENCH_BRANCH --single-branch --depth 1 https://$BENCH_REPO /llvm-project
 
-# WORKDIR /omp-taskgraph-benchs
+WORKDIR /omp-taskgraph-benchs
 
-# RUN MKL_PATH=~/intel/oneapi/mkl/2024.1 && \
-#   OPENCV_PATH=/usr/local/ && \
-#   OMP_PATH=/usr/clang-x86 && \
-#   make
+RUN MKL_PATH=~/intel/oneapi/mkl/2024.1 && \
+  OPENCV_PATH=/usr/ && \
+  OMP_PATH=/usr/clang-x86 && \
+  make
 
 # Default command to execute when a container starts
 CMD ["/bin/bash", "-c"]
