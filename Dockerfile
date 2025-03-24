@@ -98,7 +98,8 @@ RUN mkdir -p /installer/install
 # Unpack and set up SDK
 RUN if [ -e /installer/$SDK_INSTALLER ]; then \
       echo "SDK found" && \
-      unzip /installer/$SDK_INSTALLER; \
+      unzip /installer/$SDK_INSTALLER -d /install/ && \
+      mkdir /usr/clang-x86 && mv /install/*/* /usr/clang-x86; \
     else \
       echo "Missing llvm/clang files, Need to be added in a zip file inside $SDK_INSTALLER!" && \
       exit 1; \
