@@ -88,8 +88,9 @@ RUN mkdir -p build && cd build && \
   cmake CMAKE_INSTALL_PREFIX=/usr/ -GNinja ../opencv-4.x && ninja install
 
 ##### LLVM-COMPILATION #####
-# ENV SDK_INSTALLER=clang-x86*
-ENV SDK_INSTALLER="clang-x86-openmp_taskgraph-6ee4ac22580f.zip"
+ARG SDK_BRANCH="openmp_taskgraph"
+ARG SDK_COMMIT="6ee4ac22580f"
+ENV SDK_INSTALLER="clang-x86-"$SDK_BRANCH"-"$SDK_COMMIT".zip"
 # Copy and prepare SDK installer
 RUN mkdir -p /installer
 COPY ./$SDK_INSTALLER /installer/
@@ -109,10 +110,13 @@ RUN if [ -e /installer/$SDK_INSTALLER ]; then \
 # Set up repository details
 ENV GIT_USER="jpinot"
 ENV BENCH_REPO="github.com/${GIT_USER}/omp-taskgraph-benchs.git"
-ENV BENCH_BRANCH="develop"
+ARG BENCH_BRANCH="develop"
+ARG BENCH_COMMIT="97512508521c7c47a205cd38ecf93c67fe68ccd5"
 
 # Clone the repository
-RUN git clone --branch $BENCH_BRANCH --single-branch --depth 1 https://$BENCH_REPO /omp-taskgraph-benchs
+RUN git clone --branch $BENCH_BRANCH --single-branch --depth 1 https://$BENCH_REPO /omp-taskgraph-benchs && \
+  cd /omp-taskgraph-benchs && git fetch --depth 1 origin $BENCH_COMMIT && \
+  git checkout FETCH_HEAD
 
 WORKDIR /omp-taskgraph-benchs
 
@@ -122,4 +126,4 @@ RUN MKL_PATH=/opt/intel/oneapi/mkl/2025.1 \
   make
 
 # Default command to execute when a container starts
-CMD ["/bin/bash", "-c"]
+CMD ["/bin/bash"]
