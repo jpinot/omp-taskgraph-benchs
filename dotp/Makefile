@@ -4,7 +4,7 @@ OMP		= -fopenmp
 TDG		= -DTDG -fopenmp
 TDG_LIB		= $(OMP_PATH)
 TDG_INC = $(OMP_PATH)/projects/openmp/runtime/src/
-LIBS = -lmkl_sequential -lmkl_core -lm -lmkl_rt -lpthread
+LIBS = -lm -lpthread
 MKL_LIB = $(MKL_PATH)/lib/intel64 -Wl,-rpath,$(MKL_PATH)/lib/intel64
 MKL_INC = $(MKL_PATH)/include
 
