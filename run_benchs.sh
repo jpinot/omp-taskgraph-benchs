@@ -22,19 +22,20 @@ run_with_threads() {
 
 echo "---> nbody"
 for exe in ./nbody/nbody_{vanilla,for,record,serial}; do
-  for p in "${NBODY_PARTICLES[@]}"; do
-    run_with_threads "$exe ./nbody/input.dat $p $ITERATIONS"
+  for input_file in ./nbody/data/input/nbody_input.in_*; do
+    particle_count=$(basename "$input_file" | cut -d'_' -f3)
+    run_with_threads "$exe $input_file $particle_count $ITERATIONS"
   done
 done
 
-echo "--> cholesky" 
+echo "--> cholesky"
 for exe in ./cholesky/cholesky_{vanilla,for,record,serial}; do
   for b in "${CHOLESKY_BLOCKS[@]}"; do
     run_with_threads "$exe $b $ITERATIONS"
   done
 done
 
-echo "--> heat" 
+echo "--> heat"
 for exe in ./heat/heat_{vanilla,for,record,serial}; do
   for b in "${HEAT_BLOCKS[@]}"; do
     run_with_threads "$exe ./heat/test.dat $b $ITERATIONS"
@@ -48,14 +49,14 @@ for exe in ./dotp/dot_product_{vanilla,for,record,serial}; do
   done
 done
 
-echo "--> hog" 
+echo "--> hog"
 for exe in ./hog/personDetector_{vanilla,for,record,seq}; do
   for n in "${NBLOCKS[@]}"; do
     run_with_threads "$exe ./hog/input_images/FullHD/otherImages/ 10 $ITERATIONS $n"
   done
 done
 
-echo "--> axpy" 
+echo "--> axpy"
 for exe in ./axpy/axpy_{vanilla,for,record,seq}; do
   for v in "${AXPY_VECTORS[@]}"; do
     run_with_threads "$exe $v $v $ITERATIONS"
