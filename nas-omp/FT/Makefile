@@ -39,7 +39,7 @@ ft_taskloop.o:             ft_taskloop.cpp npbparams.hpp
 	${CCOMPILE} ft_taskloop.cpp
 
 ft_taskloop_tdg.o:             ft_taskloop.cpp npbparams.hpp
-	${CCOMPILE} ft_taskloop.cpp -DTDG -fopenmp-taskgraph -o $@
+	${CCOMPILE} ft_taskloop.cpp -DTDG -fopenmp -o $@
 
 clean:
 	- rm -f *.o *~ mputil*

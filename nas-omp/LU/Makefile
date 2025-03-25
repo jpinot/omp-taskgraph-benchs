@@ -39,7 +39,7 @@ lu_taskloop.o:		lu_taskloop.cpp npbparams.hpp
 	${CCOMPILE} lu_taskloop.cpp
 
 lu_taskloop_tdg.o:		lu_taskloop.cpp npbparams.hpp
-	${CCOMPILE} lu_taskloop.cpp -DTDG -fopenmp-taskgraph -o $@
+	${CCOMPILE} lu_taskloop.cpp -DTDG -fopenmp -o $@
 
 
 clean:

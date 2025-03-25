@@ -38,7 +38,7 @@ cg_taskloop.o:             cg_taskloop.cpp npbparams.hpp
 	${CCOMPILE} cg_taskloop.cpp
 
 cg_taskloop_tdg.o:             cg_taskloop.cpp npbparams.hpp
-	${CCOMPILE} cg_taskloop.cpp -DTDG -fopenmp-taskgraph -o $@
+	${CCOMPILE} cg_taskloop.cpp -DTDG -fopenmp -o $@
 
 clean:
 	- rm -f *.o *~ 
