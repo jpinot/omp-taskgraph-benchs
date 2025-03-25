@@ -50,14 +50,14 @@ for exe in ./dotp/dot_product_{vanilla,for,record,serial}; do
 done
 
 echo "--> hog"
-for exe in ./hog/personDetector_{vanilla,for,record,seq}; do
+for exe in ./hog/personDetector_{vanilla,for,record,serial}; do
   for n in "${NBLOCKS[@]}"; do
     run_with_threads "$exe ./hog/input_images/FullHD/otherImages/ 10 $ITERATIONS $n"
   done
 done
 
 echo "--> axpy"
-for exe in ./axpy/axpy_{vanilla,for,record,seq}; do
+for exe in ./axpy/axpy_{vanilla,for,record,serial}; do
   for v in "${AXPY_VECTORS[@]}"; do
     run_with_threads "$exe $v $v $ITERATIONS"
   done
