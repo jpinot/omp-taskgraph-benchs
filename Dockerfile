@@ -126,7 +126,8 @@ RUN MKL_PATH=/opt/intel/oneapi/mkl/2025.1 \
   make
 
 # compile nas-omp
-RUN LD_LIBRARY_PATH=/usr/clang-x86/lib/x86_64-unknown-linux-gnu \
+RUN cd nas-omp && \
+  LD_LIBRARY_PATH=/usr/clang-x86/lib/x86_64-unknown-linux-gnu \
   OMP_PATH=/usr/clang-x86 \
   make suite
 
