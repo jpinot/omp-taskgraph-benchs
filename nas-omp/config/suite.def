@@ -1,36 +1,72 @@
-# BT
-bt CLASS=S
-bt CLASS=W
-bt CLASS=A
-bt CLASS=B
-bt CLASS=C
-# CG
-cg CLASS=S
-cg CLASS=W
-cg CLASS=A
-cg CLASS=B
-cg CLASS=C
-# EP
-ep CLASS=S
-ep CLASS=W
-ep CLASS=A
-ep CLASS=B
-ep CLASS=C
-# FT
-ft CLASS=S
-ft CLASS=W
-ft CLASS=A
-ft CLASS=B
-ft CLASS=C
-# SP
-sp CLASS=S
-sp CLASS=W
-sp CLASS=A
-sp CLASS=B
-sp CLASS=C
-# LU
-lu CLASS=S
-lu CLASS=W
-lu CLASS=A
-lu CLASS=B
-lu CLASS=C
+# # BT
+# bt CLASS=S
+# bt CLASS=W
+# bt CLASS=A
+# bt CLASS=B
+# bt CLASS=C
+# # CG
+# cg CLASS=S
+# cg CLASS=W
+# cg CLASS=A
+# cg CLASS=B
+# cg CLASS=C
+# # EP
+# ep CLASS=S
+# ep CLASS=W
+# ep CLASS=A
+# ep CLASS=B
+# ep CLASS=C
+# # FT
+# ft CLASS=S
+# ft CLASS=W
+# ft CLASS=A
+# ft CLASS=B
+# ft CLASS=C
+# # SP
+# sp CLASS=S
+# sp CLASS=W
+# sp CLASS=A
+# sp CLASS=B
+# sp CLASS=C
+# # LU
+# lu CLASS=S
+# lu CLASS=W
+# lu CLASS=A
+# lu CLASS=B
+# lu CLASS=C
+# BT tdg
+bt tdg CLASS=S
+bt tdg CLASS=W
+bt tdg CLASS=A
+bt tdg CLASS=B
+bt tdg CLASS=C
+# CG tdg
+cg tdg CLASS=S
+cg tdg CLASS=W
+cg tdg CLASS=A
+cg tdg CLASS=B
+cg tdg CLASS=C
+# EP tdg
+ep tdg CLASS=S
+ep tdg CLASS=W
+ep tdg CLASS=A
+ep tdg CLASS=B
+ep tdg CLASS=C
+# FT tdg
+ft tdg CLASS=S
+ft tdg CLASS=W
+ft tdg CLASS=A
+ft tdg CLASS=B
+ft tdg CLASS=C
+# SP tdg
+sp tdg CLASS=S
+sp tdg CLASS=W
+sp tdg CLASS=A
+sp tdg CLASS=B
+sp tdg CLASS=C
+# LU tdg
+lu tdg CLASS=S
+lu tdg CLASS=W
+lu tdg CLASS=A
+lu tdg CLASS=B
+lu tdg CLASS=C

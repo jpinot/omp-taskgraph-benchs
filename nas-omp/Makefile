@@ -5,46 +5,47 @@ SFILE=config/suite.def
 default: header
 	@ $(SHELL) sys/print_instructions
 
-	       
 BT: bt
 bt: header
-	cd BT; $(MAKE) CLASS=$(CLASS)
+	cd BT; $(MAKE) $(TYPE) CLASS=$(CLASS)
 		       
 SP: sp		       
 sp: header	       
-	cd SP; $(MAKE) CLASS=$(CLASS)
+	cd SP; $(MAKE) $(TYPE) CLASS=$(CLASS)
 		       
 LU: lu		       
 lu: header	       
-	cd LU; $(MAKE) CLASS=$(CLASS)
+	cd LU; $(MAKE) $(TYPE) CLASS=$(CLASS)
 		       
 MG: mg		       
 mg: header	       
-	cd MG; $(MAKE) CLASS=$(CLASS)
+	cd MG; $(MAKE) $(TYPE) CLASS=$(CLASS)
 		       
 FT: ft		       
 ft: header	       
-	cd FT; $(MAKE) CLASS=$(CLASS)
+	cd FT; $(MAKE) $(TYPE) CLASS=$(CLASS)
 		       
 IS: is		       
 is: header	       
-	cd IS; $(MAKE) CLASS=$(CLASS)
+	cd IS; $(MAKE) $(TYPE) CLASS=$(CLASS)
 		       
 CG: cg		       
 cg: header	       
-	cd CG; $(MAKE) CLASS=$(CLASS)
+	cd CG; $(MAKE) $(TYPE) CLASS=$(CLASS)
 		       
 EP: ep		       
 ep: header	       
-	cd EP; $(MAKE) CLASS=$(CLASS)
+	cd EP; $(MAKE) $(TYPE) CLASS=$(CLASS)
 
 
 # Awk script courtesy cmg@cray.com
 suite:
-	@ awk '{ if ($$1 !~ /^#/ &&  NF > 0)                              \
-	printf "make %s CLASS=%s\n", $$1, $$2 }' $(SFILE)  \
-	| $(SHELL)
-
+	@ awk '{ if ($$1 !~ /^#/ && NF > 0) { \
+	  if ($$2 == "tdg") \
+	    printf "make %s TYPE=tdg CLASS=%s\n", $$1, $$3; \
+	  else \
+	    printf "make %s CLASS=%s\n", $$1, $$2; \
+	} }' $(SFILE) | $(SHELL)
 
 # It would be nice to make clean in each subdirectory (the targets
 # are defined) but on a really clean system this will won't work
