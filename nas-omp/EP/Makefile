@@ -41,7 +41,7 @@ ep_taskloop.o:		ep_taskloop.cpp npbparams.hpp
 	${CCOMPILE} ep_taskloop.cpp
 
 ep_taskloop_tdg.o:		ep_taskloop.cpp npbparams.hpp
-	${CCOMPILE} ep_taskloop.cpp -DTDG -o $@ -fopenmp-taskgraph -g
+	${CCOMPILE} ep_taskloop.cpp -DTDG -o $@ -fopenmp -g
 
 clean:
 	- rm -f *.o *~ 

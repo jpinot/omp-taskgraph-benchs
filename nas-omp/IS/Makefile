@@ -37,7 +37,7 @@ is_taskloop.o: is_taskloop.cpp npbparams.hpp
 	${CCOMPILE} is_taskloop.cpp
 
 is_taskloop_tdg.o: is_taskloop.cpp npbparams.hpp
-	${CCOMPILE} is_taskloop.cpp -DTDG -fopenmp-taskgraph -o $@
+	${CCOMPILE} is_taskloop.cpp -DTDG -fopenmp -o $@
 
 clean:
 	- rm -f *.o *~ 
