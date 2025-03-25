@@ -125,5 +125,10 @@ RUN MKL_PATH=/opt/intel/oneapi/mkl/2025.1 \
   OMP_PATH=/usr/clang-x86 \
   make
 
+# compile nas-omp
+RUN LD_LIBRARY_PATH=/usr/clang-x86/lib/x86_64-unknown-linux-gnu \
+  OMP_PATH=/usr/clang-x86 \
+  make suite
+
 # Default command to execute when a container starts
 CMD ["/bin/bash"]
