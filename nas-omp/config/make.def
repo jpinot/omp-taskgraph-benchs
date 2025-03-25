@@ -27,8 +27,7 @@
 #---------------------------------------------------------------------------
 # This is the C compiler used for OpenMP programs
 #---------------------------------------------------------------------------
-#CC = g++ -std=c++14
-CC = clang++ -std=c++14
+CC = $(OMP_PATH)/bin/clang++ -std=c++14
 
 # This links C programs; usually the same as ${CC}
 CLINK	= $(CC)
@@ -68,8 +67,7 @@ CLINKFLAGS = -O3 -fopenmp -mcmodel=medium -g
 # this compiler go here also; typically there are few flags required; hence 
 # there are no separate macros provided for such flags.
 #---------------------------------------------------------------------------
-#UCC	= g++ -fopenmp
-UCC = clang++ -fopenmp
+UCC = $(CC) -fopenmp $(C_INC) $(C_LIB)
 
 #---------------------------------------------------------------------------
 # Destination of executables, relative to subdirs of the main directory. . 
