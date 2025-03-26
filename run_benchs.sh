@@ -63,4 +63,9 @@ for exe in ./axpy/axpy_{vanilla,for,record,serial}; do
   done
 done
 
+echo "--> nas-omp"
+for exe in ./nas-omp/bin/*; do
+    run_with_threads "$exe"
+done
+
 echo "=== All tests completed ==="
