@@ -111,7 +111,7 @@ RUN if [ -e /installer/$SDK_INSTALLER ]; then \
 ENV GIT_USER="jpinot"
 ENV BENCH_REPO="github.com/${GIT_USER}/omp-taskgraph-benchs.git"
 ARG BENCH_BRANCH="develop"
-ARG BENCH_COMMIT="97512508521c"
+ARG BENCH_COMMIT="HEAD"
 
 # Clone the repository
 RUN git clone --branch $BENCH_BRANCH --single-branch --depth 1 https://$BENCH_REPO /omp-taskgraph-benchs && \
