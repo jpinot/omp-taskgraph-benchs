@@ -5,7 +5,8 @@ Set of benchmarks used to test the performance of taskgraph. Growing
 
 To create the SDK containing all the required LLVM, Clang, and OpenMP files for different versions, the following script was used.
 Note: the flag `LIBOMP_OMPX_TASKGRAPH` can be toggled on/off for different test configurations.
-``bash
+
+```bash
 #!/bin/bash
 
 branch=$(git symbolic-ref --short HEAD)
@@ -35,6 +36,26 @@ mkdir -p build && cd build && \
   ninja install
 
 zip -r $install_prefix.zip $install_prefix/
+```
+
+## Benchmark Compilation
+
+The project includes a `Dockerfile` with all the necessary instructions to compile the benchmarks. It supports build customization through several arguments: `SDK_BRANCH`, `SDK_COMMIT`, `BENCHS_BRANCH`, and `BENCH_COMMIT`, which allow you to specify different build environments if needed.
+
+After building, a `.zip` file named `clang-x86-$SDK_BRANCH-$SDK_COMMIT.zip` is generated. This file contains the install output from the Clang build.
+
+## Execution on BSC MareNostrum 5
+
+A build script named `run_benchs.sh` is provided to automate the execution of the benchmarks. For running on MareNostrum 5 (or any SLURM-based HPC system), the script has been extended to correctly set up the environment:
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=nbody-test
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=48
+#SBATCH --time=02:00:00
+#SBATCH --partition=debug
+#SBATCH --exclusive
 ```
 
 ## How to Build & Run
