@@ -8,7 +8,9 @@
  * Iterative solver for heat distribution
  */
 #include "heat.h"
+#include "omp.h"
 #include "timer.h"
+#include "csv_writer.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -229,6 +231,11 @@ int main(int argc, char *argv[]) {
   coarsen( param.u, np, np, param.uvis, param.visres+2, param.visres+2 );
   write_image( resfile, param.uvis, param.visres+2, param.visres+2 );
 #endif
+    int is_tdg = 0;
+#ifndef TDG
+    is_tdg = 1;
+#endif
+    add_to_csv("%s,%s,%d,%f,%d", "axpy", is_tdg ? "record" : "vanilla", Num_B, makespan, omp_get_num_threads());
   finalize(&param);
   return 0;
 }
