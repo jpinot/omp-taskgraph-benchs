@@ -5,7 +5,7 @@ BIN = cholesky
 all: $(BIN)_vanilla $(BIN)_serial $(BIN)_record $(BIN)_for
 
 $(BIN)_serial: $(BIN).c
-	$(CC) $(CFLAGS) -I$(MKL_INC) $^ -DSEQ -o $@ -L$(MKL_LIB) $(LIBS) -I$(TDG_INC) -I$(UTILS_INC)
+	$(CC) $(OMP) $(CFLAGS) -I$(MKL_INC) $^ -DSEQ -o $@ -L$(MKL_LIB) $(LIBS) -I$(TDG_INC) -I$(UTILS_INC)
 
 $(BIN)_record: $(BIN).c
 	$(CC) $(CFLAGS) -I$(MKL_INC) $(OMP) $(TDG) $^ -o $@ -L$(MKL_LIB) -L$(TDG_LIB) $(LIBS) -I$(TDG_INC) -I$(UTILS_INC)

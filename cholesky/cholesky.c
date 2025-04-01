@@ -1,6 +1,7 @@
 #include "cholesky.h"
 #include "omp.h"
 #include "timer.h"
+#include "csv_writer.h"
 #include <assert.h>
 #include <errno.h>
 #include <stdio.h>
@@ -184,5 +185,10 @@ int main(int argc, char *argv[]) {
   // printf(" N=%4d  BS=%4d  #BLOCKS=%6d  %9.3fms Res=%2.6f  gflops=%2.6f \n",
   // n, ts, NB*NB, t2*1e3, matrix[n*n-1], gflops);
 #endif
+    int is_tdg = 0;
+#ifndef TDG
+    is_tdg = 1;
+#endif
+    add_to_csv("%s,%s,%d,%f,%d", "cholesky", is_tdg ? "record" : "vanilla", ts, time, omp_get_max_threads());
   return 0;
 }
