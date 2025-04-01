@@ -10,7 +10,7 @@ misc.o: misc.c
 	$(CC) -c $(CFLAGS) $< -o $@
 
 heat_serial: heat.c misc.o
-	$(CC) $(CFLAGS) $+ $(LFLAGS) -o $@ -I$(UTILS_INC)
+	$(CC) $(OMP) $(CFLAGS) $+ $(LFLAGS) -o $@ -I$(UTILS_INC)
 
 heat_for: heat_for.c misc.o
 	$(CC) $(OMP) $(CFLAGS) $+ $(LFLAGS) -o $@ -I$(TDG_INC) -I$(UTILS_INC)
