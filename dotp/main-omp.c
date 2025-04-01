@@ -1,10 +1,12 @@
 #include "kernels.h"
 #include "timer.h"
+#include "csv_writer.h"
 #include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
 #include <time.h>
+#include <omp.h>
 long N;
 long CHUNK_SIZE;
 
@@ -88,7 +90,12 @@ int main(int argc, char *argv[]) {
     makespan += TIMER;
   }
 
+    int is_tdg = 0;
+#ifndef TDG
+    is_tdg = 1;
+#endif
   printf("result = %f, size (K), %lu, chunk (K), %lu, time (ms), %g\n", res,
          N / 1024, CHUNK_SIZE / 1024, makespan);
+  add_to_csv("%s,%s,%d,%f,%d", "dotp", is_tdg ? "record" : "vanilla", CHUNK_SIZE / 1024, makespan, omp_get_max_threads());
   return 0;
 }

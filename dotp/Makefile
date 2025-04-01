@@ -11,7 +11,7 @@ kernels.o: kernels.c
 	$(CC) $(CFLAGS) -I$(MKL_INC) -DMKL_ILP64 -m64 $^ -c -o $@ -L$(MKL_LIB)
 
 dot_product_serial : dotp-omp.c main-omp.c kernels.o
-	$(CC) $(CFLAGS) $^ -o $@ $(LIBS) -I$(UTILS_INC)
+	$(CC) $(OMP) $(CFLAGS) $^ -o $@ $(LIBS) -I$(UTILS_INC)
 
 dot_product_vanilla: dotp-omp.c main-omp.c kernels.o
 	$(CC) $(OMP) $(CFLAGS) $^ -o $@ $(LIBS) -I$(UTILS_INC)
