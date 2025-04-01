@@ -2,6 +2,8 @@
 
 #include "nbody.h"
 #include "timer.h"
+#include "csv_writer.h"
+#include "omp.h"
 
 extern void calculate_force_func(float, int, Particle *, Particle *, int);
 
@@ -84,6 +86,12 @@ int main(int argc, char **argv) {
 
     } // for
     printf("%g ms passed\n", makespan);
+    int is_tdg = 0;
+#ifndef TDG
+    is_tdg = 1;
+#endif
+    add_to_csv("%s,%s,%d,%f,%d", "nbody", is_tdg ? "record" : "vanilla", number_of_particles, makespan, omp_get_max_threads());
+
   } // single,parallel
 
   Particle_array_output_xyz(fileptr, particle_array, number_of_particles);
