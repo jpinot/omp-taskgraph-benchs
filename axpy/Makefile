@@ -4,7 +4,7 @@ BIN = axpy
 all: $(BIN)_serial $(BIN)_vanilla $(BIN)_record $(BIN)_for
 
 $(BIN)_serial: $(BIN).c
-	$(CC) $(CFLAGS) $^ -o $@ -I$(UTILS_INC)
+	$(CC) $(OMP) $(CFLAGS) $^ -o $@ -I$(UTILS_INC)
 
 $(BIN)_vanilla: $(BIN).c
 	$(CC) $(CFLAGS) $(OMP) $^ -o $@ -I$(UTILS_INC)

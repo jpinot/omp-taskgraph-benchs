@@ -8,6 +8,7 @@
 #include <omp.h>
 #endif
 #include "timer.h"
+#include "csv_writer.h"
 
 #define a 1.0
 
@@ -98,6 +99,11 @@ int main(int argc, char **argv) {
     }
 
 #pragma omp taskwait // final taskwait, might not be necessary
+    int is_tdg = 0;
+#ifndef TDG
+    is_tdg = 1;
+#endif
+    add_to_csv("%s,%s,%d,%f,%d", "axpy", is_tdg ? "record" : "vanilla", BS, makespan, omp_get_max_threads());
     printf("%g ms passed\n", makespan);
   }
 
