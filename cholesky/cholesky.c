@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
   // n, ts, NB*NB, t2*1e3, matrix[n*n-1], gflops);
 #endif
     int is_tdg = 0;
-#ifndef TDG
+#ifdef TDG
     is_tdg = 1;
 #endif
     add_to_csv("%s,%s,%d,%f,%d", "cholesky", is_tdg ? "record" : "vanilla", ts, time, omp_get_max_threads());
