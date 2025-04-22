@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
 #ifndef TDG
     is_tdg = 1;
 #endif
-    add_to_csv("%s,%s,%d,%f,%d", "axpy", is_tdg ? "record" : "vanilla", BS, makespan, omp_get_max_threads());
+    add_to_csv("%s,%s,%d,%f,%d", "axpy", is_tdg ? "record" : "vanilla", NB, makespan, omp_get_max_threads());
     printf("%g ms passed\n", makespan);
   }
 
