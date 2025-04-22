@@ -11,7 +11,7 @@ AXPY_VECTORS=(4096 8192 16384 32768)
 NBLOCKS=(1 2 3 4 5 6)
 executables=(vanilla for record serial)
 
-export LD_LIBRARY_PATH=/usr/clang-x86/lib/x86_64-unknown-linux-gnu/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/clang-x86/lib/x86_64-unknown-linux-gnu/
 
 run_with_threads() {
   local cmd=$1
