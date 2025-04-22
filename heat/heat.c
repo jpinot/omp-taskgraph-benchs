@@ -232,7 +232,7 @@ int main(int argc, char *argv[]) {
   write_image( resfile, param.uvis, param.visres+2, param.visres+2 );
 #endif
     int is_tdg = 0;
-#ifndef TDG
+#ifdef TDG
     is_tdg = 1;
 #endif
     add_to_csv("%s,%s,%d,%f,%d", "heat", is_tdg ? "record" : "vanilla", Num_B, makespan, omp_get_num_threads());
