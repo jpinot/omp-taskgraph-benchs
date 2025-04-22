@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
   }
 
     int is_tdg = 0;
-#ifndef TDG
+#ifdef TDG
     is_tdg = 1;
 #endif
   printf("result = %f, size (K), %lu, chunk (K), %lu, time (ms), %g\n", res,
