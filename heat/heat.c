@@ -235,7 +235,7 @@ int main(int argc, char *argv[]) {
 #ifndef TDG
     is_tdg = 1;
 #endif
-    add_to_csv("%s,%s,%d,%f,%d", "axpy", is_tdg ? "record" : "vanilla", Num_B, makespan, omp_get_num_threads());
+    add_to_csv("%s,%s,%d,%f,%d", "heat", is_tdg ? "record" : "vanilla", Num_B, makespan, omp_get_num_threads());
   finalize(&param);
   return 0;
 }
