@@ -55,6 +55,11 @@ int main(int argc, char *argv[]) {
   ;
   N_CHUNKS = (N_CHUNKS * CHUNK_SIZE < N) ? N_CHUNKS + 1 : N_CHUNKS;
 
+    int is_tdg = 0;
+#ifdef TDG
+    is_tdg = 1;
+#endif
+
 #pragma omp parallel
 #pragma omp single
   for (int i = 0; i < numIter; ++i) {
@@ -86,16 +91,11 @@ int main(int argc, char *argv[]) {
 #endif
 
     END_TIMER;
-
     makespan += TIMER;
-  }
 
-    int is_tdg = 0;
-#ifdef TDG
-    is_tdg = 1;
-#endif
+    add_to_csv("%s,%s,%d,%d,%f,%d", "dotp", is_tdg ? "record" : "vanilla", i, N_CHUNKS, TIMER, omp_get_max_threads());
+  }
   printf("result = %f, size (K), %lu, chunk (K), %lu, time (ms), %g\n", res,
          N / 1024, CHUNK_SIZE / 1024, makespan);
-  add_to_csv("%s,%s,%d,%f,%d", "dotp", is_tdg ? "record" : "vanilla", CHUNK_SIZE / 1024, makespan, omp_get_max_threads());
   return 0;
 }
