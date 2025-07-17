@@ -61,6 +61,7 @@ Authors of the OpenMP code:
 #define TIMING 1
 #ifdef TIMING
 #include <sys/time.h>
+#include "csv_writer.h"
 #endif
 /*
  * ---------------------------------------------------------------------
@@ -363,6 +364,10 @@ int main(int argc, char **argv){
 			
 			timer_start(T_BENCH);
 		}
+    int is_tdg = 0;
+#ifdef TDG
+    is_tdg = 1;
+#endif
 
 		/*
 		 * --------------------------------------------------------------------
@@ -425,6 +430,9 @@ int main(int argc, char **argv){
                           gettimeofday(&te, NULL);
                           printf ("iteration %d took %ld us \n", it,
                                   (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec));
+                          long time = (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec);
+                          add_to_csv("%s,%s,%d,%c,%f,%d", "nas_cg", is_tdg ? "record" : "vanilla",
+                              it - 1, class_npb, time / 1000.f, omp_get_max_threads());
                         }
                         #endif
 		} /* end of main iter inv pow meth */

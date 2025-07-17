@@ -56,6 +56,7 @@ Authors of the OpenMP code:
 */
 
 #include "omp.h"
+#include "csv_writer.h"
 #include "../common/npb-CPP.hpp"
 #include "npbparams.hpp"
 #include <unistd.h>
@@ -281,6 +282,10 @@ int main(int argc, char **argv){
 	double total_time, mflops;
 	boolean verified;
 	char class_npb;
+  int is_tdg = 0;
+#ifdef TDG
+  is_tdg = 1;
+#endif
 
         #ifdef TIMING
           struct timeval ts, te;
@@ -382,6 +387,9 @@ int main(int argc, char **argv){
                             gettimeofday(&te, NULL);
                             printf("iteration %d took %ld us\n", iter,
                                   (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec));
+                          long time = (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec);
+                          add_to_csv("%s,%s,%d,%c,%f,%d", "nas_ft", is_tdg ? "record" : "vanilla",
+                              iter - 1, class_npb, time / 1000.f, omp_get_max_threads());
                           }
                         #endif
 		}
@@ -589,7 +597,7 @@ static void cffts2_rev(int is,
 	// }
 
 	#ifdef TDG
-	#pragma omp taskgraph tdg_type(dynamic)
+	#pragma omp taskgraph
 	#endif
 	#pragma omp taskloop num_tasks(numThreads)
 	for(int k=0; k<d3; k++){
@@ -684,7 +692,7 @@ static void cffts3_rev(int is,
 	// }
 	
 	#ifdef TDG
-	#pragma omp taskgraph tdg_type(dynamic)
+	#pragma omp taskgraph
 	#endif
 	#pragma omp taskloop num_tasks(numThreads) //default(shared)
 	for(int j=0; j<d2; j++){

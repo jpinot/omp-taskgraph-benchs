@@ -57,6 +57,7 @@ Authors of the OpenMP code:
 */
 
 #include "omp.h"
+#include "csv_writer.h"
 #include "../common/npb-CPP.hpp"
 #include "npbparams.hpp"
 #define TIMING 1
@@ -110,6 +111,10 @@ int main(int argc, char **argv)
         boolean verified, timers_enabled; 
         double dum[3] = {1.0, 1.0, 1.0}; 
         char size[16]; 
+        int is_tdg = 0;
+#ifdef TDG
+        is_tdg = 1;
+#endif
  
         #ifdef TIMING
         struct timeval ts, te;
@@ -302,6 +307,9 @@ int main(int argc, char **argv)
                 gettimeofday(&te, NULL);
                 printf ("iteration %d took %ld us\n", iter,
                           (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec));
+                          long time = (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec);
+                          add_to_csv("%s,%s,%d,%c,%f,%d", "nas_ep", is_tdg ? "record" : "vanilla",
+                              iter - 1, class_npb, time / 1000.f, omp_get_max_threads());
               }
               #endif
                 } 

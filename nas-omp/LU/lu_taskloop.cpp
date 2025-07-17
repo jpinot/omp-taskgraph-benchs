@@ -57,6 +57,7 @@ Authors of the OpenMP code:
 	
 */
 #include "omp.h"
+#include "csv_writer.h"
 #include "../common/npb-CPP.hpp"
 #include "npbparams.hpp"
 #define TIMING 1
@@ -227,12 +228,13 @@ void verify(double xcr[],
 static boolean flag[ISIZ1/2*2+1];
 static boolean flag2[ISIZ1/2*2+1];
 
+char class_npb;
+
 /* lu */
 int main(int argc, char* argv[]){
 #if defined(DO_NOT_ALLOCATE_ARRAYS_WITH_DYNAMIC_MEMORY_AND_AS_SINGLE_DIMENSION)
 	printf(" DO_NOT_ALLOCATE_ARRAYS_WITH_DYNAMIC_MEMORY_AND_AS_SINGLE_DIMENSION mode on\n");
 #endif
-	char class_npb;
 	boolean verified;
 	double mflops;
 	double t, tmax, trecs[T_LAST+1];
@@ -2866,6 +2868,10 @@ void ssor(int niter){
         #ifdef TIMING
         struct timeval ts, te;
         #endif
+        int is_tdg = 0;
+#ifdef TDG
+        is_tdg = 1;
+#endif
 	/*
 	 * ---------------------------------------------------------------------
 	 * local variables
@@ -3180,6 +3186,9 @@ void ssor(int niter){
                           gettimeofday(&te, NULL);
                           printf ("iteration %d took %ld us\n", istep,
                             (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec));
+                          long time = (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec);
+                          add_to_csv("%s,%s,%d,%c,%f,%d", "nas_lu", is_tdg ? "record" : "vanilla",
+                              istep - 1, class_npb, time / 1000.f, omp_get_max_threads());
                         }
                         #endif
 		}
