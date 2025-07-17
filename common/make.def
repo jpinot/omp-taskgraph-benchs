@@ -3,7 +3,8 @@ CCX = $(OMP_PATH)/bin/clang++
 
 CFLAGS = -O3 -g
 OMP = -fopenmp
-TDG = -DTDG -fopenmp
+TDG = -DTDG
+#TDG = -DTDG -fopenmp-taskgraph
 
 TDG_LIB = $(OMP_PATH)
 TDG_INC = $(OMP_PATH)/projects/openmp/runtime/src/
