@@ -287,7 +287,7 @@ int main(int argc, char *argv[])
                             printf ("iteration %d took %ld us\n", step, (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec));
                           long time = (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec);
                           add_to_csv("%s,%s,%d,%c,%f,%d", "nas_bt", is_tdg ? "record" : "vanilla",
-                              istep - 1, class_npb, time / 1000.f, omp_get_max_threads());
+                              step - 1, class_npb, time / 1000.f, omp_get_max_threads());
                           }
                         #endif
 		}
