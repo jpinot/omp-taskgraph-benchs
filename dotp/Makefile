@@ -17,7 +17,7 @@ dot_product_vanilla: dotp-omp.c main-omp.c kernels.o
 	$(CC) $(OMP) $(CFLAGS) $^ -o $@ $(LIBS) -I$(UTILS_INC)
 
 dot_product_record: dotp-omp.c main-omp.c kernels.o
-	$(CC) $(OMP) $(CFLAGS) $^ -o $@ $(LIBS) $(TDG) -L$(TDG_LIB) -I$(UTILS_INC)
+	$(CC) $(TDG) $(CFLAGS) $(OMP) $^ -o $@ $(LIBS) -L$(TDG_LIB) -I$(TDG_INC) -I$(UTILS_INC)
 
 dot_product_for: dotp-omp.c main-omp-for.c kernels.o
 	$(CC) $(OMP) $(CFLAGS) $^ -o $@ $(LIBS) -I$(TDG_INC) -I$(UTILS_INC)
