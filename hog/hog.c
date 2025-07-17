@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "csv_writer.h"
+#include <omp.h>
 
 extern int NBLOCKS;
 
@@ -1807,6 +1809,10 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
   VlHog *self = vl_hog_new();
 
   double makespan = 0;
+  int is_tdg = 0;
+#ifdef TDG
+  is_tdg = 1;
+#endif
 #pragma omp parallel
 #pragma omp master
   {
@@ -1896,6 +1902,8 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
 #endif
         END_TIMER;
         makespan += TIMER;
+        int blocks = (int)ceil((vl_float)(HOG_HEIGHT-1)/NBLOCKS)*ceil((vl_float)(HOG_WIDHT-1)/NBLOCKS);
+        add_to_csv("%s,%s,%d,%d,%f,%d", "hog", is_tdg ? "record" : "vanilla", i, blocks, TIMER, omp_get_max_threads());
 
         vl_hog_delete(self);
         self = vl_hog_new();
