@@ -54,6 +54,11 @@ int main(int argc, char **argv) {
 
   double makespan = 0;
 
+  int is_tdg = 0;
+#ifdef TDG
+  is_tdg = 1;
+#endif
+
 #pragma omp parallel
 #pragma omp single
   {
@@ -84,14 +89,9 @@ int main(int argc, char **argv) {
       particle_array = particle_array2;
       particle_array2 = tmp;
 
-    } // for
-    printf("%g ms passed\n", makespan);
-    int is_tdg = 0;
-#ifdef TDG
-    is_tdg = 1;
-#endif
-    add_to_csv("%s,%s,%d,%f,%d", "nbody", is_tdg ? "record" : "vanilla", number_of_particles, makespan, omp_get_max_threads());
+    add_to_csv("%s,%s,%d,%d,%f,%d", "nbody", is_tdg ? "record" : "vanilla", timestep - 1, number_of_particles, TIMER, omp_get_max_threads());
 
+    } // for
   } // single,parallel
 
   Particle_array_output_xyz(fileptr, particle_array, number_of_particles);
