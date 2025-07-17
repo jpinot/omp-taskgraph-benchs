@@ -58,6 +58,7 @@ Authors of the OpenMP code:
 
 #include "omp.h"
 #include "../common/npb-CPP.hpp"
+#include "csv_writer.h"
 #include "npbparams.hpp"
 #include <unistd.h>
 #define TIMING 1
@@ -177,6 +178,10 @@ int main(int argc, char *argv[])
         #ifdef TIMING
         struct timeval ts, te;
         #endif
+  int is_tdg = 0;
+#ifdef TDG
+  is_tdg = 1;
+#endif
 	/*
 	 * ---------------------------------------------------------------------
 	 * root node reads input file (if it exists) else takes
@@ -280,6 +285,9 @@ int main(int argc, char *argv[])
                           {
                             gettimeofday(&te, NULL);
                             printf ("iteration %d took %ld us\n", step, (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec));
+                          long time = (te.tv_sec - ts.tv_sec) * 1000000 + (te.tv_usec - ts.tv_usec);
+                          add_to_csv("%s,%s,%d,%c,%f,%d", "nas_bt", is_tdg ? "record" : "vanilla",
+                              istep - 1, class_npb, time / 1000.f, omp_get_max_threads());
                           }
                         #endif
 		}
