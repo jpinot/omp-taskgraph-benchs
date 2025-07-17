@@ -36,12 +36,16 @@ int main(int argc, char **argv) {
             argv[0]);
     exit(-1);
   }
+  int is_tdg = 0;
+#ifdef TDG
+  is_tdg = 1;
+#endif
 
-  long int N = atoi(argv[1]);
-  int NB = atoi(argv[2]);
-  int num_iter = atoi(argv[3]);
+  const long int N = atoi(argv[1]);
+  const int NB = atoi(argv[2]);
+  const int num_iter = atoi(argv[3]);
 
-  int BS = N / NB;
+  const int BS = N / NB;
 
   if (N % NB != 0) {
     fprintf(stderr, "NB should divide N\n");
@@ -96,15 +100,11 @@ int main(int argc, char **argv) {
 #endif
       END_TIMER;
       makespan += TIMER;
+      printf("iteration %d took %.20f ms\n", i, TIMER);
+      add_to_csv("%s,%s,%d,%d,%f,%d", "axpy", is_tdg ? "record" : "vanilla", i, NB, TIMER, omp_get_max_threads());
     }
 
 #pragma omp taskwait // final taskwait, might not be necessary
-    int is_tdg = 0;
-#ifdef TDG
-    is_tdg = 1;
-#endif
-    add_to_csv("%s,%s,%d,%f,%d", "axpy", is_tdg ? "record" : "vanilla", NB, makespan, omp_get_max_threads());
-    printf("%g ms passed\n", makespan);
   }
 
   for (int i = 0; i < N; ++i) {
@@ -114,5 +114,5 @@ int main(int argc, char **argv) {
     }
   }
 
-  return 1;
+  return 0;
 }
