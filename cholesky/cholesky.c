@@ -89,6 +89,12 @@ void cholesky_blocked(const int ts, double *Ah[NB][NB], int num_iter) {
 
       END_TIMER;
       makespan += TIMER;
+      printf("iteration %d took %.20f ms\n", iter, TIMER);
+      int is_tdg = 0;
+#ifdef TDG
+      is_tdg = 1;
+#endif
+      add_to_csv("%s,%s,%d,%d,%f,%d", "cholesky", is_tdg ? "record" : "vanilla", iter, NB*NB, TIMER, omp_get_max_threads());
 
       // reset the matrix
       convert_to_blocks(ts, NB, DIM, (double(*)[DIM])original_matrix, Ah);
