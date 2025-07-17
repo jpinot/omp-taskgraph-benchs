@@ -152,6 +152,11 @@ int main(int argc, char *argv[]) {
   double *u_tmp = (double *)malloc(sizeof(double) * np * np);
   memcpy(u_tmp, param.u, sizeof(double) * np * np);
 
+    int is_tdg = 0;
+#ifdef TDG
+    is_tdg = 1;
+#endif
+
 #pragma omp parallel
 #pragma omp single
   //#pragma omp master
@@ -215,6 +220,9 @@ int main(int argc, char *argv[]) {
 
       END_TIMER;
       makespan += TIMER;
+    add_to_csv("%s,%s,%d,%d,%f,%d", "heat", is_tdg ? "record" : "vanilla", i, Num_B*Num_B, makespan,
+        omp_get_num_threads());
+      printf("iteration %d took %.20f ms\n", iter, TIMER);
       // reset the heatmap
 #ifdef VERBOSE
       if(i==1)
@@ -231,11 +239,6 @@ int main(int argc, char *argv[]) {
   coarsen( param.u, np, np, param.uvis, param.visres+2, param.visres+2 );
   write_image( resfile, param.uvis, param.visres+2, param.visres+2 );
 #endif
-    int is_tdg = 0;
-#ifdef TDG
-    is_tdg = 1;
-#endif
-    add_to_csv("%s,%s,%d,%f,%d", "heat", is_tdg ? "record" : "vanilla", Num_B, makespan, omp_get_num_threads());
   finalize(&param);
   return 0;
 }
