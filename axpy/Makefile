@@ -4,10 +4,10 @@ BIN = axpy
 all: $(BIN)_serial $(BIN)_vanilla $(BIN)_record $(BIN)_for
 
 $(BIN)_serial: $(BIN).c
-	$(CC) $(OMP) $(CFLAGS) $^ -o $@ -I$(UTILS_INC)
+	$(CC) $(OMP) $(CFLAGS) $^ -o $@ -I$(UTILS_INC) -I$(TDG_INC)
 
 $(BIN)_vanilla: $(BIN).c
-	$(CC) $(CFLAGS) $(OMP) $^ -o $@ -I$(UTILS_INC)
+	$(CC) $(CFLAGS) $(OMP) $^ -o $@ -I$(UTILS_INC) -I$(TDG_INC)
 
 $(BIN)_record: $(BIN).c
 	$(CC) $(TDG) $(CFLAGS) $(OMP) $^ -o $@ -L$(TDG_LIB) -I$(TDG_INC) -I$(UTILS_INC)
