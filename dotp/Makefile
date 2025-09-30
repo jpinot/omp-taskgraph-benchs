@@ -11,10 +11,10 @@ kernels.o: kernels.c
 	$(CC) $(CFLAGS) -I$(MKL_INC) -DMKL_ILP64 -m64 $^ -c -o $@ -L$(MKL_LIB)
 
 dot_product_serial : dotp-omp.c main-omp.c kernels.o
-	$(CC) $(OMP) $(CFLAGS) $^ -o $@ $(LIBS) -I$(UTILS_INC)
+	$(CC) $(OMP) $(CFLAGS) $^ -o $@ $(LIBS) -I$(UTILS_INC) -I$(TDG_INC)
 
 dot_product_vanilla: dotp-omp.c main-omp.c kernels.o
-	$(CC) $(OMP) $(CFLAGS) $^ -o $@ $(LIBS) -I$(UTILS_INC)
+	$(CC) $(OMP) $(CFLAGS) $^ -o $@ $(LIBS) -I$(UTILS_INC) -I$(TDG_INC)
 
 dot_product_record: dotp-omp.c main-omp.c kernels.o
 	$(CC) $(TDG) $(CFLAGS) $(OMP) $^ -o $@ $(LIBS) -L$(TDG_LIB) -I$(TDG_INC) -I$(UTILS_INC)
