@@ -47,9 +47,9 @@ extern void GOMP_print_task_counters(void);
 
 extern int num_iter;
 
-vl_float features[HOG_HEIGHT - 1][HOG_WIDHT - 1][4][NUM_ORIENTATIONS] = {0.0};
-vl_float hog[HOG_HEIGHT][HOG_WIDHT][2 * NUM_ORIENTATIONS] = {0.0};
-vl_float hogNorm[HOG_HEIGHT][HOG_WIDHT] = {0.0};
+vl_float features[HOG_HEIGHT - 1][HOG_WIDTH - 1][4][NUM_ORIENTATIONS] = {0.0};
+vl_float hog[HOG_HEIGHT][HOG_WIDTH][2 * NUM_ORIENTATIONS] = {0.0};
+vl_float hogNorm[HOG_HEIGHT][HOG_WIDTH] = {0.0};
 
 Locations windows[NWINDOWS];
 
@@ -1359,10 +1359,10 @@ VlHog *vl_hog_new() {
   /*self->hog = &hog ;
   self->hogNorm = &hogNorm;
   */
-  // memset(&hog[0][0][0], 0, sizeof(vl_float) * HOG_WIDHT * HOG_HEIGHT *
+  // memset(&hog[0][0][0], 0, sizeof(vl_float) * HOG_WIDTH * HOG_HEIGHT *
   // NUM_ORIENTATIONS * 2) ; memset(&hogNorm[0][0], 0, sizeof(vl_float) *
-  // HOG_WIDHT * HOG_HEIGHT) ; self->hog = calloc(HOG_WIDHT * HOG_HEIGHT *
-  // NUM_ORIENTATIONS * 2, sizeof(vl_float)) ; self->hogNorm = calloc(HOG_WIDHT
+  // HOG_WIDTH * HOG_HEIGHT) ; self->hog = calloc(HOG_WIDTH * HOG_HEIGHT *
+  // NUM_ORIENTATIONS * 2, sizeof(vl_float)) ; self->hogNorm = calloc(HOG_WIDTH
   // * HOG_HEIGHT, sizeof(vl_float)) ;
 
   self->cell_GradComputed =
@@ -1505,27 +1505,27 @@ void vl_bsc_compute_gradient(VlHog *self, vl_float const *pixel, vl_index x,
     if (binx >= 0 && biny >= 0) {
       vl_float bin = gradNorm * ow * wx1 * wy1;
       vl_float *p =
-          &hog[0][0][0] + ((biny * HOG_WIDHT * 2 * NUM_ORIENTATIONS) +
+          &hog[0][0][0] + ((biny * HOG_WIDTH * 2 * NUM_ORIENTATIONS) +
                            (binx * 2 * NUM_ORIENTATIONS) + orientation);
 #if (defined OMP) || (defined OMPSS)
 #pragma omp atomic
 #endif
       *p += bin;
     }
-    if (binx < HOG_WIDHT - 1 && biny >= 0) {
+    if (binx < HOG_WIDTH - 1 && biny >= 0) {
       vl_float bin = gradNorm * ow * wx2 * wy1;
       vl_float *p =
-          &hog[0][0][0] + ((biny * HOG_WIDHT * 2 * NUM_ORIENTATIONS) +
+          &hog[0][0][0] + ((biny * HOG_WIDTH * 2 * NUM_ORIENTATIONS) +
                            ((binx + 1) * 2 * NUM_ORIENTATIONS) + orientation);
 #if (defined OMP) || (defined OMPSS)
 #pragma omp atomic
 #endif
       *p += bin;
     }
-    if (binx < HOG_WIDHT - 1 && biny < HOG_HEIGHT - 1) {
+    if (binx < HOG_WIDTH - 1 && biny < HOG_HEIGHT - 1) {
       vl_float bin = gradNorm * ow * wx2 * wy2;
       vl_float *p =
-          &hog[0][0][0] + (((biny + 1) * HOG_WIDHT * 2 * NUM_ORIENTATIONS) +
+          &hog[0][0][0] + (((biny + 1) * HOG_WIDTH * 2 * NUM_ORIENTATIONS) +
                            ((binx + 1) * 2 * NUM_ORIENTATIONS) + orientation);
 #if (defined OMP) || (defined OMPSS)
 #pragma omp atomic
@@ -1535,7 +1535,7 @@ void vl_bsc_compute_gradient(VlHog *self, vl_float const *pixel, vl_index x,
     if (binx >= 0 && biny < HOG_HEIGHT - 1) {
       vl_float bin = gradNorm * ow * wx1 * wy2;
       vl_float *p =
-          &hog[0][0][0] + (((biny + 1) * HOG_WIDHT * 2 * NUM_ORIENTATIONS) +
+          &hog[0][0][0] + (((biny + 1) * HOG_WIDTH * 2 * NUM_ORIENTATIONS) +
                            (binx * 2 * NUM_ORIENTATIONS) + orientation);
 #if (defined OMP) || (defined OMPSS)
 #pragma omp atomic
@@ -1601,7 +1601,7 @@ void vl_bsc_block_normalization(VlHog *self, vl_index y, vl_index x) {
    applied.
    */
 
-  vl_index xp = VL_MIN(x + 1, HOG_WIDHT - 1);
+  vl_index xp = VL_MIN(x + 1, HOG_WIDTH - 1);
   vl_index yp = VL_MIN(y + 1, HOG_HEIGHT - 1);
   vl_uindex k;
 
@@ -1676,7 +1676,7 @@ vl_float vl_bsc_predictWindow(vl_index by, vl_index bx) {
   /* nWindow = window.y * NWINDOWS.Y + window.x;
      (window.y,window.x) given by block (0,0) of the window */
   int nWindow =
-      (by - WINHEIGHT + 1) * (HOG_WIDHT - WINWIDTH) + (bx - WINWIDTH + 1);
+      (by - WINHEIGHT + 1) * (HOG_WIDTH - WINWIDTH) + (bx - WINWIDTH + 1);
 
   if (dec_value > 0) {
     windows[nWindow].py = (by - WINHEIGHT + 1) * CELL_SIZE;
@@ -1709,8 +1709,8 @@ void vl_bsc_compute_block(VlHog *self, vl_float const *image, vl_index by,
   /* 2x2 cells in a block */
   for (cy = by; cy < by + 3; cy++) {
     for (cx = bx; cx < bx + 3; cx++) {
-      if (cy < HOG_HEIGHT && cx < HOG_WIDHT &&
-          self->cell_GradComputed[cx + cy * HOG_WIDHT] ==
+      if (cy < HOG_HEIGHT && cx < HOG_WIDTH &&
+          self->cell_GradComputed[cx + cy * HOG_WIDTH] ==
               0) { // Cell not computed
 
         /* 8x8 pixels in a cell */
@@ -1728,14 +1728,14 @@ void vl_bsc_compute_block(VlHog *self, vl_float const *image, vl_index by,
             }
           }
         }
-        self->cell_GradComputed[cx + cy * HOG_WIDHT] = 1;
+        self->cell_GradComputed[cx + cy * HOG_WIDTH] = 1;
       } /* End of 8x8 pixels in the CELL  */
     }
   } /* End of 2x2 cells in the BLOCK */
 
   for (cy = by; cy < by + 2; cy++) {
     for (cx = bx; cx < bx + 2; cx++) {
-      if (self->cell_NormComputed[cx + cy * HOG_WIDHT] ==
+      if (self->cell_NormComputed[cx + cy * HOG_WIDTH] ==
           0) { // Cell norm not computed
 
         /*
@@ -1750,7 +1750,7 @@ void vl_bsc_compute_block(VlHog *self, vl_float const *image, vl_index by,
           vl_float h = h1 + h2;
           hogNorm[cy][cx] += h * h;
         }
-        self->cell_NormComputed[cx + cy * HOG_WIDHT] = 1;
+        self->cell_NormComputed[cx + cy * HOG_WIDTH] = 1;
       }
     }
   }
@@ -1789,7 +1789,7 @@ static void cache_flush() {
  ** @param winDetected Windows information (output).
  **
  ** Retrieve the computed HOG features. The buffer @c features must
- ** have the dimensions HOG_HEIGHT * HOG_WIDHT * HOG_DIMENSION.
+ ** have the dimensions HOG_HEIGHT * HOG_WIDTH * HOG_DIMENSION.
  **/
 vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
                      Locations **winDetected) {
@@ -1798,11 +1798,11 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
   assert(height == HEIGHT_FullHD);
 
   memset(features, 0.0,
-         (HOG_HEIGHT - 1) * (HOG_WIDHT - 1) * 4 * NUM_ORIENTATIONS *
+         (HOG_HEIGHT - 1) * (HOG_WIDTH - 1) * 4 * NUM_ORIENTATIONS *
              sizeof(vl_float));
   memset(hog, 0.0,
-         HOG_HEIGHT * HOG_WIDHT * 2 * NUM_ORIENTATIONS * sizeof(vl_float));
-  memset(hogNorm, 0.0, HOG_HEIGHT * HOG_WIDHT * sizeof(vl_float));
+         HOG_HEIGHT * HOG_WIDTH * 2 * NUM_ORIENTATIONS * sizeof(vl_float));
+  memset(hogNorm, 0.0, HOG_HEIGHT * HOG_WIDTH * sizeof(vl_float));
 
   int bx, by;
 
@@ -1827,7 +1827,7 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
                      // iteration would be enough to determine the dependencies
         for (by = 0; by < HOG_HEIGHT - 1;
              by = by + NBLOCKS) { // Num y blocks (num y cells - 1)
-          for (bx = 0; bx < HOG_WIDHT - 1;
+          for (bx = 0; bx < HOG_WIDTH - 1;
                bx = bx + NBLOCKS) { // Num x blocks (num y cells - 1)
             if (by == 0 && bx == 0) {
 #pragma omp task firstprivate(by, bx)                                          \
@@ -1839,7 +1839,7 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
                 int ubx = bx + NBLOCKS, uby = by + NBLOCKS;
                 for (tby = by; tby < uby; tby++) {
                   for (tbx = bx; tbx < ubx; tbx++) {
-                    if ((tby < HOG_HEIGHT - 1) && (tbx < HOG_WIDHT - 1))
+                    if ((tby < HOG_HEIGHT - 1) && (tbx < HOG_WIDTH - 1))
                       vl_bsc_compute_block(self, image, tby, tbx);
                   }
                 }
@@ -1854,7 +1854,7 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
                 int ubx = bx + NBLOCKS, uby = by + NBLOCKS;
                 for (tby = by; tby < uby; tby++) {
                   for (tbx = bx; tbx < ubx; tbx++) {
-                    if ((tby < HOG_HEIGHT - 1) && (tbx < HOG_WIDHT - 1))
+                    if ((tby < HOG_HEIGHT - 1) && (tbx < HOG_WIDTH - 1))
                       vl_bsc_compute_block(self, image, tby, tbx);
                   }
                 }
@@ -1869,7 +1869,7 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
                 int ubx = bx + NBLOCKS, uby = by + NBLOCKS;
                 for (tby = by; tby < uby; tby++) {
                   for (tbx = bx; tbx < ubx; tbx++) {
-                    if ((tby < HOG_HEIGHT - 1) && (tbx < HOG_WIDHT - 1))
+                    if ((tby < HOG_HEIGHT - 1) && (tbx < HOG_WIDTH - 1))
                       vl_bsc_compute_block(self, image, tby, tbx);
                   }
                 }
@@ -1887,7 +1887,7 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
                 int ubx = bx + NBLOCKS, uby = by + NBLOCKS;
                 for (tby = by; tby < uby; tby++) {
                   for (tbx = bx; tbx < ubx; tbx++) {
-                    if ((tby < HOG_HEIGHT - 1) && (tbx < HOG_WIDHT - 1))
+                    if ((tby < HOG_HEIGHT - 1) && (tbx < HOG_WIDTH - 1))
                       vl_bsc_compute_block(self, image, tby, tbx);
                   }
                 }
@@ -1902,7 +1902,7 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
 #endif
         END_TIMER;
         makespan += TIMER;
-        int blocks = (int)ceil((vl_float)(HOG_HEIGHT-1)/NBLOCKS)*ceil((vl_float)(HOG_WIDHT-1)/NBLOCKS);
+        int blocks = (int)ceil((vl_float)(HOG_HEIGHT-1)/NBLOCKS)*ceil((vl_float)(HOG_WIDTH-1)/NBLOCKS);
         add_to_csv("%s,%s,%d,%d,%f,%d", "hog", is_tdg ? "record" : "vanilla", i, blocks, TIMER, omp_get_max_threads());
 
         vl_hog_delete(self);
@@ -1913,7 +1913,7 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
 
 #if defined(_OPENMP) || defined(OMPSS)
 //    printf("\nOpenMP:\t Threads = %d\n\t NumTasks =
-//    %.0f\n",omp_get_num_threads(),ceil((vl_float)(HOG_HEIGHT-1)/NBLOCKS)*ceil((vl_float)(HOG_WIDHT-1)/NBLOCKS));
+//    %.0f\n",omp_get_num_threads(),ceil((vl_float)(HOG_HEIGHT-1)/NBLOCKS)*ceil((vl_float)(HOG_WIDTH-1)/NBLOCKS));
 //    printf("\t BlocksPerTask = %dx%d\n",NBLOCKS,NBLOCKS);
 #endif
 
@@ -1940,7 +1940,7 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
   // Write hog in file
   FILE *f = fopen ("hog.txt","w+");
   for (int y = 0; y < HOG_HEIGHT; y++) {
-    for (int x = 0; x < HOG_WIDHT; x++) {
+    for (int x = 0; x < HOG_WIDTH; x++) {
       fprintf(f, "\nCell (%d,%d):\t",y,x);
       for (int k = 0; k < 2*NUM_ORIENTATIONS; k++) {
         fprintf(f, " %.12f", hog[y][x][k]);
@@ -1953,7 +1953,7 @@ vl_float *vl_bsc_hog(vl_float const *image, vl_size width, vl_size height,
   // Write hogNorm in file
   FILE *f2 = fopen ("hogNorm.txt","w+");
   for (int y = 0; y < HOG_HEIGHT; y++) {
-    for (int x = 0; x < HOG_WIDHT; x++) {
+    for (int x = 0; x < HOG_WIDTH; x++) {
       fprintf(f2, "\nCell (%d,%d):\t%.12f",y,x,hogNorm[y][x]);
     }
   }
