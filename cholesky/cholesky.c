@@ -195,6 +195,6 @@ int main(int argc, char *argv[]) {
 #ifdef TDG
     is_tdg = 1;
 #endif
-    add_to_csv("%s,%s,%d,%f,%d", "cholesky", is_tdg ? "record" : "vanilla", ts, time, omp_get_max_threads());
+    add_to_csv("%s,%s,%d,%d,%f,%d", "cholesky", is_tdg ? "record" : "vanilla", ts, num_iter, time, omp_get_max_threads());
   return 0;
 }
